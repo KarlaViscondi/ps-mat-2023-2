@@ -361,12 +361,9 @@ export default function CustomersForm() {
           
         </Box>
 
-        <Box sx={{ fontFamily: 'monospace' }}>
-          { JSON.stringify(customer) }
-        </Box>
-
-        <Toolbar sx={{ justifyContent: "space-around" }}>
+        <Toolbar sx={{ ml:30}}>
           <Button 
+            sx={{mr:5}}
             variant="contained" 
             color="secondary" 
             type="submit"
@@ -382,6 +379,9 @@ export default function CustomersForm() {
           </Button>
         </Toolbar>
       
+        <Box sx={{ fontFamily: 'monospace' }}>
+          { JSON.stringify(customer) }
+        </Box>
       </form>
     </>
 

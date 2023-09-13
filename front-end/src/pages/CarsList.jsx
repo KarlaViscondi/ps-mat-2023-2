@@ -91,32 +91,32 @@ export default function carsList() {
     {
       field: 'brand',
       headerName: 'Marca',
-      width: 300
+      width: 150
     },
     {
       field: 'model',
       headerName: 'Modelo',
-      align: 'center',
-      headerAlign: 'center',
+      // align: 'center',
+      // headerAlign: 'center',
       width: 150
     },
     {
       field: 'color',
       headerName: 'Cor',
-      align: 'center',
-      headerAlign: 'center',
+      // align: 'center',
+      // headerAlign: 'center',
       width: 150
     },
     {
       field: 'year_manufacture',
       headerName: 'Ano de fabricação',
-      width: 100,
+      width: 150,
     },
     {
       field: 'imported',
       headerName: 'Importado',
-      align: 'center',
-      headerAlign: 'center',
+      // align: 'center',
+      // headerAlign: 'center',
       width: 150
     },
     {
@@ -127,8 +127,8 @@ export default function carsList() {
     {
       field: 'selling_date',
       headerName: 'Data de venda',
-      align: 'center',
-      headerAlign: 'center',
+      // align: 'center',
+      // headerAlign: 'center',
       width: 150,
       valueFormatter: params => {
         if(params.value) return format(new Date(params.value), 'dd/MM/yyyy')
@@ -137,8 +137,8 @@ export default function carsList() {
     },
     {
       field: 'selling_price',
-      headerName: 'Preço',
-      width: 300
+      headerName: 'Preço de venda',
+      width: 150
     },
     {
       field: 'edit',

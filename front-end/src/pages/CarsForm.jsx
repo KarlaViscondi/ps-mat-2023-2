@@ -15,6 +15,8 @@ import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import ptLocale from 'date-fns/locale/pt-BR'
 import {parseISO} from 'date-fns'
+import FormControlLabel from '@mui/material/FormControlLabel' //controlar o label
+import Switch from '@mui/material/Switch' //botao de "liga e desliga"
 
 export default function CarsForm() {
 
@@ -27,7 +29,7 @@ export default function CarsForm() {
     model: '',
     color: '',
     year_manufacture: '',
-    imported: '',
+    imported: false,
     plates: '',
     selling_date: '',
     selling_price: ''
@@ -52,16 +54,6 @@ export default function CarsForm() {
     openDialog,
     isFormModified
   } = state
-
-  // const states = [
-  //   { label: 'Distrito Federal', value: 'DF' },
-  //   { label: 'Espírito Santo', value: 'ES' },
-  //   { label: 'Goiás', value: 'GO' },
-  //   { label: 'Minas Gerais', value: 'MG' },
-  //   { label: 'Paraná', value: 'PR' },
-  //   { label: 'Rio de Janeiro', value: 'RJ' },
-  //   { label: 'São Paulo', value: 'SP' }
-  // ]
 
   const maskFormatChars = {
     '9': '[0-9]',
@@ -118,7 +110,6 @@ export default function CarsForm() {
     setState({ ...state, showWaiting: true }) // Exibe o backdrop
     event.preventDefault(false)   // Evita o recarregamento da página
     try {
-
       let result
 
       // Se existir o campo id no json de dados, chama o método PUT
@@ -183,6 +174,39 @@ export default function CarsForm() {
     if(answer) navigate('..', { relative: 'path' })
   }
 
+  //Para fazer uma listagem dos possiveis anos de fabrição
+  const anos = [];
+  for (let ano = 1940; ano <= 2023; ano++) {
+    anos.push(ano);
+  }
+
+  const handleYearChange = (event) => {
+    const newCar = {
+      ...state.car,
+      year_manufacture: event.target.value // Atualizar year_manufacture
+    };
+    setState({
+      ...state,
+      car: newCar
+    });
+  };
+
+  //Importado? sim ou não/ true or false
+  const handleSwitchChange = () => {
+    //cópia do objeto car do state
+    const newCar = { ...car };
+  
+    // Atualizar imported na cópia do obj
+    newCar.imported = !newCar.imported;
+  
+    // Atualizar state com o novo obj car
+    setState({
+      ...state,
+      car: newCar,
+      isFormModified: true 
+    });
+  };
+
   return(
     <>
 
@@ -208,7 +232,7 @@ export default function CarsForm() {
       </Typography>
 
       <form onSubmit={handleFormSubmit}>
-
+        
         <Box className="form-fields">
         
           <TextField 
@@ -232,7 +256,6 @@ export default function CarsForm() {
             fullWidth
             value={car.model}
             onChange={handleFieldChange}
-            autoFocus
           />
 
           <TextField 
@@ -244,29 +267,37 @@ export default function CarsForm() {
             fullWidth
             value={car.color}
             onChange={handleFieldChange}
-            autoFocus
           />
-          {/*LISTA DE ANOS!!!!!!!!!!!!!!!!!!!*/}
-          {/* <InputMask
-            mask="9999"
-            maskChar=" "
+          <TextField
+            id="year_manufacture"
+            name="year_manufacture"
+            label="Ano de fabricação"
+            variant="filled"
+            required
+            fullWidth
+            select
             value={car.year_manufacture}
-            onChange={handleFieldChange}
+            onChange={handleYearChange}
           >
-            {
-              () => <TextField 
-                id="year_manufacture"
-                name="year_manufacture" 
-                label="Ano de fabricação" 
-                variant="filled"
+          <MenuItem value="">Selecione o ano de fabricação</MenuItem>
+            {anos.map((ano) => (
+          <MenuItem key={ano} value={ano}>
+            {ano}
+          </MenuItem>
+            ))}
+          </TextField>
+          <FormControlLabel
+            control={
+              <Switch
                 required
                 fullWidth
+                checked={car.imported}
+                onChange={handleSwitchChange}
+                name="imported"
               />
-            }
-          </InputMask> */}
-
-          {/*Importado?*/}
-
+          }
+            label={car.imported ? 'Importado' : 'Não Importado'} // Define o rótulo com base no estado do isImported
+          />
           <InputMask
             mask="AAA-9A99"
             formatChars={maskFormatChars}
@@ -282,12 +313,9 @@ export default function CarsForm() {
                 variant="filled"
                 required
                 fullWidth
-                value={car.plates}
-                onChange={handleFieldChange}
               />
             }
           </InputMask>
-
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptLocale}>
             <DatePicker
               label="Data de venda"
@@ -298,12 +326,10 @@ export default function CarsForm() {
               slotProps={{ textField: { variant: 'filled', fullWidth: true } }}
             />
           </LocalizationProvider>
-          {/*ARRUMAR PARA ACEITAR SO NUMEROS!!!!!!!!!!!!!!!!*/}
           <InputMask
-            mask="999999"
+          mask="999999999999"
             formatChars={maskFormatChars}
-            maskChar="_"
-            value={car.phone}
+            value={car.selling_price}
             onChange={handleFieldChange}
           >
             {
@@ -312,22 +338,16 @@ export default function CarsForm() {
                 name="selling_price" 
                 label="Preço de venda" 
                 variant="filled"
-                required
                 fullWidth
-                value={car.selling_price}
-                onChange={handleFieldChange}
               />
             }
           </InputMask>
-
+          
         </Box>
 
-        <Box sx={{ fontFamily: 'monospace' }}>
-          { JSON.stringify(car) }
-        </Box>
-
-        <Toolbar sx={{ justifyContent: "space-around" }}>
+        <Toolbar sx={{ ml:30}}>
           <Button 
+            sx={{mr:5}}
             variant="contained" 
             color="secondary" 
             type="submit"
@@ -342,7 +362,9 @@ export default function CarsForm() {
             Voltar
           </Button>
         </Toolbar>
-      
+        <Box sx={{ fontFamily: 'monospace' }}>
+          { JSON.stringify(car) }
+        </Box>
       </form>
     </>
   )
