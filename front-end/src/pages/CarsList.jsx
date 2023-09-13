@@ -15,10 +15,10 @@ import myfetch from '../utils/myfetch'
 import Notification from '../components/ui/Notification'
 import Waiting from '../components/ui/Waiting'
 
-export default function CustomersList() {
+export default function carsList() {
 
   const [state, setState] = React.useState({
-    customers: {},
+    cars: {},
     openDialog: false,
     deleteId: null,
     showWaiting: false,
@@ -31,7 +31,7 @@ export default function CustomersList() {
 
   // Desestruturando as variáveis de estado
   const {
-    customers,
+    cars,
     openDialog,
     deleteId,
     showWaiting,
@@ -48,7 +48,7 @@ export default function CustomersList() {
     // Exibe a tela de espera
     setState({ ...state, showWaiting: true, openDialog: false })
     try {
-      const result = await myfetch.get('customer')
+      const result = await myfetch.get('car')
 
       let notif = {
         show: false,
@@ -64,7 +64,7 @@ export default function CustomersList() {
 
       setState({
         ...state, 
-        customers: result, 
+        cars: result, 
         showWaiting: false,
         openDialog: false,
         notification: notif
@@ -89,46 +89,56 @@ export default function CustomersList() {
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: 'name',
-      headerName: 'Nome',
+      field: 'brand',
+      headerName: 'Marca',
       width: 300
     },
     {
-      field: 'ident_document',
-      headerName: 'CPF',
+      field: 'model',
+      headerName: 'Modelo',
       align: 'center',
       headerAlign: 'center',
       width: 150
     },
     {
-      field: 'birth_date',
-      headerName: 'Data nasc.',
+      field: 'color',
+      headerName: 'Cor',
       align: 'center',
       headerAlign: 'center',
+      width: 150
+    },
+    {
+      field: 'year_manufacture',
+      headerName: 'Ano de fabricação',
       width: 100,
+    },
+    {
+      field: 'imported',
+      headerName: 'Importado',
+      align: 'center',
+      headerAlign: 'center',
+      width: 150
+    },
+    {
+      field: 'plates',
+      headerName: 'Placa',
+      width: 150
+    },
+    {
+      field: 'selling_date',
+      headerName: 'Data de venda',
+      align: 'center',
+      headerAlign: 'center',
+      width: 150,
       valueFormatter: params => {
         if(params.value) return format(new Date(params.value), 'dd/MM/yyyy')
         else return ''
       }
     },
     {
-      field: 'municipality',
-      headerName: 'Município/UF',
-      width: 300,
-      // Colocando dois campos na mesma célula
-      valueGetter: params => params.row.municipality + '/' + params.row.state
-    },
-    {
-      field: 'phone',
-      headerName: 'Celular',
-      align: 'center',
-      headerAlign: 'center',
-      width: 150
-    },
-    {
-      field: 'email',
-      headerName: 'E-mail',
-      width: 200
+      field: 'selling_price',
+      headerName: 'Preço',
+      width: 300
     },
     {
       field: 'edit',
@@ -169,8 +179,8 @@ export default function CustomersList() {
 
     if(answer) {
       try {
-        // Faz a chamada ao back-end para excluir o cliente
-        await myfetch.delete(`customer/${deleteId}`)
+        // Faz a chamada ao back-end para excluir o carro
+        await myfetch.delete(`car/${deleteId}`)
         
         // Se a exclusão tiver sido feita com sucesso, atualiza a listagem
         loadData(true)
@@ -220,7 +230,7 @@ export default function CustomersList() {
       />
 
       <Typography variant="h1" sx={{ mb: '50px' }}>
-        Listagem de clientes
+        Listagem de carros
       </Typography>
 
       <Box sx={{
@@ -235,14 +245,14 @@ export default function CustomersList() {
             size="large"
             startIcon={<AddBoxIcon />}
           >
-            Cadastrar novo cliente
+            Cadastrar novo carro
           </Button>
         </Link>
       </Box>
 
       <Paper elevation={4} sx={{ height: 400, width: '100%' }}>
         <DataGrid
-          rows={customers}
+          rows={cars}
           columns={columns}
           initialState={{
             pagination: {
