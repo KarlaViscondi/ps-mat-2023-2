@@ -379,9 +379,9 @@ export default function CustomersForm() {
           </Button>
         </Toolbar>
       
-        <Box sx={{ fontFamily: 'monospace' }}>
+        {/* <Box sx={{ fontFamily: 'monospace' }}>
           { JSON.stringify(customer) }
-        </Box>
+        </Box> */}
       </form>
     </>
 

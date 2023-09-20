@@ -362,9 +362,9 @@ export default function CarsForm() {
             Voltar
           </Button>
         </Toolbar>
-        <Box sx={{ fontFamily: 'monospace' }}>
+        {/* <Box sx={{ fontFamily: 'monospace' }}>
           { JSON.stringify(car) }
-        </Box>
+        </Box> */}
       </form>
     </>
   )
