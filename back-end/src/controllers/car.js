@@ -17,7 +17,10 @@ controller.create = async function(req, res){
 
 controller.retrieveAll = async function(req, res){
     try{
+        let include = []
+        if(req.query.related) include.customer = true
         const result = await prisma.car.findMany({
+            include, //para pegar todos os dados do cliente que comprou o carro
             orderBy: [
                 {brand: 'asc'},
                 {model: 'asc'}
