@@ -87,7 +87,7 @@ export default function CarsForm() {
       if(isUpdating){
         car = await myfetch.get(`car/${params.id}`)
       //É necessario converter a data de compra de string para data antes de carrega-la no componente datepicker
-        result.selling_date = parseISO(result.selling_date)
+        car.selling_date = parseISO(car.selling_date)
       }
       //Busca a listagem de clientes para preencher o componente de escolha
       let customers = await myfetch.get('customer')
@@ -288,7 +288,6 @@ export default function CarsForm() {
             name="year_manufacture"
             label="Ano de fabricação"
             variant="filled"
-            required
             fullWidth
             select
             value={car.year_manufacture}

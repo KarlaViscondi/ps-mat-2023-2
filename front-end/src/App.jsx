@@ -14,6 +14,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import Homepage from './pages/Homepage'
 import CustomersList from './pages/CustomersList'
 import CustomersForm from './pages/CustomersForm'
+
 import CarsForm from './pages/CarsForm'
 import CarsList from './pages/CarsList'
 
@@ -38,9 +39,9 @@ function App() {
                 <Route path="/customers" element={ <CustomersList /> } />
                 <Route path="/customers/new" element={ <CustomersForm /> } />
                 <Route path="/customers/:id" element={ <CustomersForm /> } />
-                <Route path="/cars" element={ <CarsList/> }></Route>
-                <Route path="/cars/new" element={ <CarsForm/> } />
-                <Route path="/cars/:id" element={ <CarsForm/> } />
+                <Route path="/cars" element={ <CarsList /> } />
+                <Route path="/cars/new" element={ <CarsForm /> } />
+                <Route path="/cars/:id" element={ <CarsForm /> } />
               </Routes>
 
             </Box>
