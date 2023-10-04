@@ -15,7 +15,7 @@ import myfetch from '../utils/myfetch'
 import Notification from '../components/ui/Notification'
 import Waiting from '../components/ui/Waiting'
 
-export default function carsList() {
+export default function CarsList() {
 
   const [state, setState] = React.useState({
     cars: {},
@@ -96,63 +96,65 @@ export default function carsList() {
     {
       field: 'model',
       headerName: 'Modelo',
-      // align: 'center',
-      // headerAlign: 'center',
+      align: 'left',
+      headerAlign: 'left',
       width: 150
     },
     {
       field: 'color',
       headerName: 'Cor',
-      // align: 'center',
-      // headerAlign: 'center',
+      align: 'left',
+      headerAlign: 'left',
       width: 150
     },
     {
       field: 'year_manufacture',
-      headerName: 'Ano de fabricação',
-      width: 150,
+      headerName: 'Ano fabricação',
+      width: 200
     },
     {
       field: 'imported',
-      headerName: 'Importado',
-      // align: 'center',
-      // headerAlign: 'center',
-      width: 150
+      headerName: 'Ano fabricação',
+      width: 200,
+      valueFormatter: params => {
+        if(params.value === true)  return 'Sim'
+        return 'Não'
+      }
     },
     {
       field: 'plates',
       headerName: 'Placa',
-      width: 150
+      width: 200
+    },
+    {
+      field: 'selling_price',
+      headerName: 'Valor venda',
+      headerAlign: 'right',
+      align: 'right',
+      width: 200,
+      valueFormatter: params => {
+        if(params.value) return Number(params.value).toLocaleString(
+          'pt-BR',  // Português do Brasil
+          { style: 'currency', currency: 'BRL' }   // Moeda: real brasileiro
+        )
+        else return ''
+      }
     },
     {
       field: 'selling_date',
-      headerName: 'Data de venda',
-      // align: 'center',
-      // headerAlign: 'center',
-      width: 150,
+      headerName: 'Data venda',
+      align: 'left',
+      headerAlign: 'left',
+      width: 100,
       valueFormatter: params => {
         if(params.value) return format(new Date(params.value), 'dd/MM/yyyy')
         else return ''
       }
     },
     {
-      field: 'selling_price',
-      headerName: 'Preço de venda',
-      width: 150,
-      align:'right',
-      valueFormatter: params => { //Formatar dindin
-        if(params.value) return Number(params.value).toLocaleString(
-          'pt-BR', 
-          {style: 'currency', currency: 'BRL'}
-        )
-        else return ''
-      }
-    },
-    {
       field: 'customer_id',
-      headerName: 'Cliente',
-      width: 150,
-      // align:'right',
+      headerName: 'Cliente adquirente',
+      width: 250,
       valueGetter: params => {
         return params.row?.customer?.name
       }
@@ -160,8 +162,8 @@ export default function carsList() {
     {
       field: 'edit',
       headerName: 'Editar',
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: 'left',
+      align: 'left',
       width: 90,
       renderCell: params =>
         <Link to={'./' + params.id}>
@@ -173,8 +175,8 @@ export default function carsList() {
     {
       field: 'delete',
       headerName: 'Excluir',
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: 'left',
+      align: 'left',
       width: 90,
       renderCell: params =>
         <IconButton 
@@ -196,7 +198,7 @@ export default function carsList() {
 
     if(answer) {
       try {
-        // Faz a chamada ao back-end para excluir o carro
+        // Faz a chamada ao back-end para excluir o cliente
         await myfetch.delete(`car/${deleteId}`)
         
         // Se a exclusão tiver sido feita com sucesso, atualiza a listagem

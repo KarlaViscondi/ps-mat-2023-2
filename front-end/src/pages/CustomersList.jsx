@@ -164,10 +164,9 @@ export default function CustomersList() {
   }
 
   async function handleDialogClose(answer) {
-    // Fecha a caixa de diálogo de confirmação
-    setState({ ...state, openDialog: false })
-
     if(answer) {
+      // Fecha a caixa de diálogo de confirmação e exibe a tela de espera
+      setState({ ...state, openDialog: false, showWaiting: true })
       try {
         // Faz a chamada ao back-end para excluir o cliente
         await myfetch.delete(`customer/${deleteId}`)
@@ -189,6 +188,8 @@ export default function CustomersList() {
         console.error(error)
       }
     }
+    // Fecha a caixa de diálogo de confirmação
+    else setState({ ...state, openDialog: false })
   }
 
   function handleNotificationClose() {

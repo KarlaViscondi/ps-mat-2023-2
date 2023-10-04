@@ -1,17 +1,20 @@
 import express, { json, urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import dotenv from 'dotenv'
+import protectRoutes from './lib/protectRoutes.js'
 
-import cors from 'cors' // npm i cors - para o back aceitar requisicao de qualquer porta
+import cors from 'cors'
 
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
-//Importar client do prisma
-import prisma from "./database/client.js";
+
+// Importa as variáveis de ambiente do arquivo .env
+dotenv.config()
 
 const app = express();
 
-app.use(cors()) ////
+app.use(cors())
 app.use(logger("dev"));
 app.use(json());
 app.use(urlencoded({ extended: false }));
@@ -20,7 +23,11 @@ app.use(cookieParser());
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
-////////////////////////////////////////////////////
+/////////////////////////////////////////////////
+
+// Protege as rotas, exigindo autenticação prévia
+app.use(protectRoutes)
+
 import carRouter from './routes/car.js'
 app.use('/car', carRouter)
 

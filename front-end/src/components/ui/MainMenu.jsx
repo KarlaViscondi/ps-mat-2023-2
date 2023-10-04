@@ -48,21 +48,21 @@ export default function MainMenu() {
         >
           Página inicial
         </MenuItem>
-        
-        <MenuItem divider
-          onClick={handleClose}
-          component={Link}
-          to="/customers"
-        >
-          Clientes
-        </MenuItem>
 
-        <MenuItem divider
+        <MenuItem 
           onClick={handleClose}
           component={Link}
           to="/cars"
         >
           Carros
+        </MenuItem>
+        
+        <MenuItem 
+          onClick={handleClose}
+          component={Link}
+          to="/customers"
+        >
+          Clientes
         </MenuItem>
 
       </Menu>

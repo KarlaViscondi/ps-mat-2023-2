@@ -11,10 +11,10 @@ import Notification from '../components/ui/Notification'
 import { useNavigate, useParams } from 'react-router-dom'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
 import InputMask from 'react-input-mask'
-import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers'
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import ptLocale from 'date-fns/locale/pt-BR'
-import {parseISO} from 'date-fns'
+import { parseISO } from 'date-fns'
 
 export default function CustomersForm() {
 
@@ -25,7 +25,7 @@ export default function CustomersForm() {
   const customerDefaults = {
     name: '',
     ident_document: '',
-    birth_date: '',
+    //birth_date: '',
     street_name: '',
     house_number: '',
     neighborhood: '',
@@ -87,9 +87,13 @@ export default function CustomersForm() {
     setState({ ...state, showWaiting: true })
     try {
       const result = await myfetch.get(`customer/${params.id}`)
-      //É necessario converter a data de nasc de string para data antes de carrega-la no componente datepicker
+      
+      // É necesário converter a data de nascimento de string para data
+      // antes de carregá-la no componente DatePicker
       result.birth_date = parseISO(result.birth_date)
+
       setState({ ...state, showWaiting: false, customer: result })
+      
     } 
     catch(error) {
       setState({ ...state, 
@@ -178,7 +182,7 @@ export default function CustomersForm() {
     // Fechamos a caixa de diálogo
     setState({ ...state, openDialog: false })
 
-    // Se o usuário tiver respondido quer quer voltar à página
+    // Se o usuário tiver respondido se quer voltar à página
     // de listagem mesmo com alterações pendentes, faremos a
     // vontade dele
     if(answer) navigate('..', { relative: 'path' })
@@ -252,7 +256,7 @@ export default function CustomersForm() {
               slotProps={{ textField: { variant: 'filled', fullWidth: true } }}
             />
           </LocalizationProvider>
-            
+
           <TextField 
             id="street_name"
             name="street_name" 
@@ -361,9 +365,12 @@ export default function CustomersForm() {
           
         </Box>
 
-        <Toolbar sx={{ ml:30}}>
+        <Box sx={{ fontFamily: 'monospace' }}>
+          { JSON.stringify(customer) }
+        </Box>
+
+        <Toolbar sx={{ justifyContent: "space-around" }}>
           <Button 
-            sx={{mr:5}}
             variant="contained" 
             color="secondary" 
             type="submit"
@@ -379,9 +386,6 @@ export default function CustomersForm() {
           </Button>
         </Toolbar>
       
-        {/* <Box sx={{ fontFamily: 'monospace' }}>
-          { JSON.stringify(customer) }
-        </Box> */}
       </form>
     </>
 

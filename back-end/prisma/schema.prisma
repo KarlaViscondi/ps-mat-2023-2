@@ -11,40 +11,40 @@ datasource db {
 }
 
 model Car {
-  id                  Int      @id @default(autoincrement())
-  brand               String
-  model               String
-  color               String
-  year_manufacture    Int
-  imported            Boolean @default(false)
-  plates              String @unique //Índice único
-  selling_date        DateTime? //Campo anulável
-  selling_price       Decimal? //Campo anulável
-  customer_id         Int? //Opcional
-  customer            Customer? @relation(fields: [customer_id], references: [id]) //chave estrangeira
+  id                Int         @id @default(autoincrement())
+  brand             String
+  model             String
+  color             String
+  year_manufacture  Int
+  imported          Boolean     @default(false)
+  plates            String      @unique   // Índice único
+  selling_date      DateTime?             // Campo anulável
+  selling_price     Decimal?              // Campo anulável
+  customer_id       Int?        // Opcional
+  customer          Customer?   @relation(fields: [customer_id], references: [id])
 }
 
 model Customer {
-  id                  Int       @id @default(autoincrement())
-  name                String
-  ident_document      String
-  birth_date          DateTime?
-  street_name         String
-  house_number        String
-  complements         String? //Complemento do endereço
-  neighborhood        String //Bairro
-  municipality        String
-  state               String
-  phone               String
-  email               String @unique
-  cars                Car[] //Carros adquiridos pelo cliente
+  id                Int         @id @default(autoincrement())
+  name              String
+  ident_document    String
+  birth_date        DateTime?
+  street_name       String
+  house_number      String
+  complements       String?     // Complemento do endereço
+  neighborhood      String      // Bairro
+  municipality      String
+  state             String
+  phone             String
+  email             String      @unique
+  cars              Car[]       // Carros adquiridos pelo cliente
 }
 
 model User {
-  id                  Int     @id @default(autoincrement())
-  first_name          String
-  last_name           String
-  email               String  @unique
-  password            String
-  is_admin            Boolean
+  id                Int         @id @default(autoincrement())
+  first_name        String
+  last_name         String
+  email             String      @unique
+  password          String
+  is_admin          Boolean     @default(false)
 }
