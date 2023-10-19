@@ -82,8 +82,8 @@ export default function Login() {
             severity: 'error',
             message: error.message
             }
-
         })
+        console.error(error)
         }
     }
 
@@ -113,7 +113,7 @@ export default function Login() {
 
         <Paper sx={{ padding: '36px' }}>
 
-            <form className="form-fields1" onSubmit={handleFormSubmit}>
+            <form className="form-fields" onSubmit={handleFormSubmit}>
             <TextField
                 id="email"
                 name="email"
@@ -123,6 +123,7 @@ export default function Login() {
                 value={user.email}
                 onChange={handleFieldChange}
                 required
+                autoFocus
             />
 
             <TextField

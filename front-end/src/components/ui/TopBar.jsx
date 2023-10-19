@@ -5,9 +5,8 @@ import Toolbar from '@mui/material/Toolbar';
 import logo from '../../assets/karangos-logo-600px.png'
 import MainMenu from './MainMenu'
 import myfetch from '../../utils/myfetch'
-import Button from '@mui/material/Button'
-import PersonIcon from '@mui/icons-material/Person'
 import { useLocation, useNavigate } from 'react-router-dom'
+import UserMenu from './UserMenu'
 
 export default function TopBar() {
 
@@ -16,7 +15,7 @@ export default function TopBar() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  // useEffect() para ser executado quando o componente carrega
+  // useEffect() para ser executado quando mudar a rota de front-end
   React.useEffect(() => {
     fetchLoggedInUser()
   }, [location])
@@ -27,8 +26,9 @@ export default function TopBar() {
       setLoggedInUser(user)
     }
     catch(error) {
-      // setLoggedInUser({ email: `[${error.status}]`})]
-      //Se não foi possivel obter dados do usuario autenticado, redirecionamos para a pag de login
+      setLoggedInUser(null)
+      // Se não foi possível obter os dados do usuário autenticado,
+      // redirecionamos para a página de login
       if(location.pathname !== '/login') navigate('/login')
     }
   }
@@ -37,20 +37,16 @@ export default function TopBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" enableColorOnDark 
         sx={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+        
         <Toolbar variant="dense">
           
           <MainMenu />
 
           <img src={logo} alt="Logotipo Karangos" style={{ width: '300px' }} />
         </Toolbar>
-        <Button 
-          variant="text"
-          color="secondary"
-          startIcon={<PersonIcon />}
-        >
-          { loggedInUser && (loggedInUser.first_name + ' ' + loggedInUser.last_name) }
-          
-        </Button>
+        
+        <UserMenu user={loggedInUser} />
+
       </AppBar>
     </Box>
   );
