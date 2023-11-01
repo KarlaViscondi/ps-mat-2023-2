@@ -15,6 +15,8 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import ptLocale from 'date-fns/locale/pt-BR'
 import { parseISO } from 'date-fns'
+import Customer from '../models/customer'
+import { ZodError } from 'zod'
 
 export default function CustomersForm() {
 
@@ -44,7 +46,8 @@ export default function CustomersForm() {
       message: ''
     },
     openDialog: false,
-    isFormModified: false
+    isFormModified: false,
+    validationErrors: {}
   })
 
   const {
@@ -52,7 +55,8 @@ export default function CustomersForm() {
     showWaiting,
     notification,
     openDialog,
-    isFormModified
+    isFormModified,
+    validationErrors
   } = state
 
   const states = [
@@ -123,6 +127,8 @@ export default function CustomersForm() {
     setState({ ...state, showWaiting: true }) // Exibe o backdrop
     event.preventDefault(false)   // Evita o recarregamento da página
     try {
+      //Chama a validação da biblioteca Zod
+      Customer.parse(customer)
 
       let result
 
@@ -138,17 +144,39 @@ export default function CustomersForm() {
         notification: {
           show: true,
           severity: 'success',
-          message: 'Dados salvos com sucesso.'
+          message: 'Dados salvos com sucesso.',
+          validationErrors: {}
         }  
       })  
     }
     catch(error) {
-      setState({ ...state, 
+
+      if(error instanceof ZodError){
+        console.error(error)
+
+        //Preenchendo os estados validationError para exibir os erros p/ o usuário
+        let valErrors = {}
+        for(let e of error.issues) valErrors[e.path[0]] = e.message
+
+        setState({
+          ...state,
+          validationErrors: valErrors,
+          showWaiting: false,
+          notification: {
+            show: true,
+            severity: 'error',
+            message: 'ERRO: há campos inválidos no formulário'
+          }
+        })
+        
+      } 
+      else setState({ ...state, 
         showWaiting: false, // Esconde o backdrop
         notification: {
           show: true,
           severity: 'error',
-          message: 'ERRO: ' + error.message
+          message: 'ERRO: ' + error.message,
+          validationErrors: {}
         } 
       })  
     }
@@ -226,6 +254,8 @@ export default function CustomersForm() {
             value={customer.name}
             onChange={handleFieldChange}
             autoFocus
+            error={validationErrors?.name}
+            helperText={validationErrors?.name}
           />
 
           <InputMask
@@ -242,6 +272,8 @@ export default function CustomersForm() {
                 variant="filled"
                 required
                 fullWidth
+                error={validationErrors?.ident_document}
+                helperText={validationErrors?.ident_document}
               />
             }
           </InputMask>
@@ -253,7 +285,10 @@ export default function CustomersForm() {
               onChange={ value => 
                 handleFieldChange({ target: { name: 'birth_date', value } }) 
               }
-              slotProps={{ textField: { variant: 'filled', fullWidth: true } }}
+              slotProps={{ textField: { variant: 'filled', fullWidth: true,
+              error:validationErrors?.birth_date,
+              helperText:validationErrors?.birth_date
+              }}}
             />
           </LocalizationProvider>
 
@@ -267,6 +302,8 @@ export default function CustomersForm() {
             placeholder="Ex.: Rua Principal"
             value={customer.street_name}
             onChange={handleFieldChange}
+            error={validationErrors?.street_name}
+            helperText={validationErrors?.street_name}
           />
 
           <TextField 
@@ -278,6 +315,8 @@ export default function CustomersForm() {
             fullWidth
             value={customer.house_number}
             onChange={handleFieldChange}
+            error={validationErrors?.house_number}
+            helperText={validationErrors?.house_number}
           />
 
           <TextField 
@@ -289,6 +328,8 @@ export default function CustomersForm() {
             placeholder="Apto., bloco, casa, etc."
             value={customer.complements}
             onChange={handleFieldChange}
+            error={validationErrors?.complements}
+            helperText={validationErrors?.complements}
           />
 
           <TextField 
@@ -300,6 +341,8 @@ export default function CustomersForm() {
             fullWidth
             value={customer.neighborhood}
             onChange={handleFieldChange}
+            error={validationErrors?.neighborhood}
+            helperText={validationErrors?.neighborhood}
           />
           
           <TextField 
@@ -311,6 +354,8 @@ export default function CustomersForm() {
             fullWidth
             value={customer.municipality}
             onChange={handleFieldChange}
+            error={validationErrors?.municipality}
+            helperText={validationErrors?.municipality}
           />
 
           <TextField
@@ -323,6 +368,8 @@ export default function CustomersForm() {
             required
             value={customer.state}
             onChange={handleFieldChange}
+            error={validationErrors?.state}
+            helperText={validationErrors?.state}
           >
             {states.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -348,6 +395,8 @@ export default function CustomersForm() {
                 fullWidth
                 value={customer.phone}
                 onChange={handleFieldChange}
+                error={validationErrors?.phone}
+                helperText={validationErrors?.phone}
               />
             }
           </InputMask>
@@ -361,6 +410,8 @@ export default function CustomersForm() {
             fullWidth
             value={customer.email}
             onChange={handleFieldChange}
+            error={validationErrors?.email}
+            helperText={validationErrors?.email}
           />
           
         </Box>

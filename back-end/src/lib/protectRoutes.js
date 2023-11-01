@@ -10,6 +10,10 @@ import jwt from 'jsonwebtoken'
 
 export default function (req, res, next) {
 
+    //REMOVER DEPOIS
+    next()
+    return
+
     // Verifica se a rota da vez é desprotegida
     for(let route of bypassRoutes) {
         // Se a rota estiver no vetor bypassRoutes, deixa continuar
