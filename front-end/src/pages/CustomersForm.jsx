@@ -127,7 +127,10 @@ export default function CustomersForm() {
     setState({ ...state, showWaiting: true }) // Exibe o backdrop
     event.preventDefault(false)   // Evita o recarregamento da página
     try {
-      //Chama a validação da biblioteca Zod
+
+      console.log({customer})
+
+      // Chama a validação da biblioteca Zod
       Customer.parse(customer)
 
       let result
@@ -151,25 +154,27 @@ export default function CustomersForm() {
     }
     catch(error) {
 
-      if(error instanceof ZodError){
+      if(error instanceof ZodError) {
         console.error(error)
 
-        //Preenchendo os estados validationError para exibir os erros p/ o usuário
+        // Preenchendo os estado validationError
+        // para exibir os erros para o usuário
         let valErrors = {}
         for(let e of error.issues) valErrors[e.path[0]] = e.message
 
         setState({
           ...state,
           validationErrors: valErrors,
-          showWaiting: false,
+          showWaiting: false, // Esconde o backdrop
           notification: {
             show: true,
             severity: 'error',
-            message: 'ERRO: há campos inválidos no formulário'
+            message: 'ERRO: há campos inválidos no formulário.'
           }
         })
         
-      } 
+      }
+
       else setState({ ...state, 
         showWaiting: false, // Esconde o backdrop
         notification: {
@@ -285,9 +290,11 @@ export default function CustomersForm() {
               onChange={ value => 
                 handleFieldChange({ target: { name: 'birth_date', value } }) 
               }
-              slotProps={{ textField: { variant: 'filled', fullWidth: true,
-              error:validationErrors?.birth_date,
-              helperText:validationErrors?.birth_date
+              slotProps={{ textField: { 
+                variant: 'filled', 
+                fullWidth: true,
+                error: validationErrors?.birth_date,
+                helperText: validationErrors?.birth_date
               }}}
             />
           </LocalizationProvider>
