@@ -56,7 +56,8 @@ export default function CarForm() {
     showWaiting,
     notification,
     openDialog,
-    isFormModified
+    isFormModified,
+    validationErrors
   } = state
   
   const maskFormChars = {
@@ -140,7 +141,7 @@ export default function CarForm() {
     event.preventDefault(false)   // Evita o recarregamento da página
   
     try {
-
+      console.log({car})
       Car.parse(car)
 
       let result 
@@ -159,23 +160,37 @@ export default function CarForm() {
       })  
     }
     catch(error) {
+
       if(error instanceof ZodError) {
         console.error(error)
 
         // Preenchendo os estado validationError
         // para exibir os erros para o usuário
-      let valErrors = {}
-      for(let e of error.issues) valErrors[e.path[0]] = e.message
+        let valErrors = {}
+        for(let e of error.issues) valErrors[e.path[0]] = e.message
 
-      setState({ ...state, 
+        setState({
+          ...state,
+          validationErrors: valErrors,
+          showWaiting: false, // Esconde o backdrop
+          notification: {
+            show: true,
+            severity: 'error',
+            message: 'ERRO: há campos inválidos no formulário.'
+          }
+        })
+        
+      }
+
+      else setState({ ...state, 
         showWaiting: false, // Esconde o backdrop
         notification: {
           show: true,
           severity: 'error',
-          message: 'ERRO: ' + error.message
+          message: 'ERRO: ' + error.message,
+          validationErrors: {}
         } 
       })  
-      }
     }
   }
 
@@ -313,7 +328,7 @@ export default function CarForm() {
             name="imported" 
             labelPlacement="start" 
             checked={car.imported}
-            error={validationErrors?.imported}
+            error={!!validationErrors?.imported}
             helperText={validationErrors?.imported}
           />
 

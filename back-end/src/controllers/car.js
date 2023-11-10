@@ -19,7 +19,7 @@ controller.create = async function(req, res) {
         // Retorna HTTP 422: Unprocessable Entity
         if(error instanceof ZodError) res.status(422).send(error.issues)
         // HTTP 500: Internal Server Error
-        res.status(500).send(error)
+        else res.status(500).send(error)
     }
     }
 
