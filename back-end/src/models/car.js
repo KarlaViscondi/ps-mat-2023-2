@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+const maxSellingDate = new Date();  // Hoje
+
 const Car = z.object({
     brand: 
         z.string()
@@ -17,23 +19,25 @@ const Car = z.object({
         .max(20, { message: 'Número de caracteres excedido' }),
     
     year_manufacture: 
-        z.number()
+        z.coerce.number()
         .int()
-        .min(1940)
-        .max(2023),
+        .min(1940, { message: 'Selecione um ano de fabricação'})
+        .max(2023, { message: 'Selecione um ano de fabricação'}),
     
     imported: 
         z.boolean(),
     
     plates: 
         z.string()
-        .trim()
-        .length(8, { message: 'A placa precisa conter exatamente 8 caracteres'}),
+        .transform(v => v.replace(' ', '')) // Retira os espaços
+        // Depois de um transform(), não podemos usar length(). Por isso, temos que
+        // usar refine() passando uma função personalizada para validar o tamanho do campo
+        .refine(v => v.length == 8, { message: 'O número da placa está incompleto' }),
     
     selling_date: 
-        z.coerce.date().nullable().refine(date => !date || !isNaN(new Date(date).getTime()), {
-        message: 'Data de venda inválida',
-        }),
+        z.coerce.date()
+        .max(maxSellingDate, { message: 'A data de venda não pode ser posterior à data de hoje'})
+        .nullable(),
     
     selling_price: 
         z.coerce.number()
